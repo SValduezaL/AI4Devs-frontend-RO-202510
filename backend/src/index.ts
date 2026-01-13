@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
+import path from 'path';
 import candidateRoutes from './routes/candidateRoutes';
 import positionRoutes from './routes/positionRoutes';
 import { uploadFile } from './application/services/fileUploadService';
@@ -16,7 +17,8 @@ declare global {
   }
 }
 
-dotenv.config();
+// Cargar variables de entorno desde el archivo .env en la raíz del proyecto
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 const prisma = new PrismaClient();
 
 export const app = express();
@@ -31,9 +33,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware para permitir CORS desde http://localhost:3000
+// Middleware para permitir CORS
+// Permite múltiples orígenes separados por coma o un solo origen
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+const allowedOrigins = corsOrigin.split(',').map(origin => origin.trim());
+
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Permitir requests sin origen (mobile apps, curl, etc.) en desarrollo
+    if (!origin && process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+    if (origin && allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
@@ -51,7 +67,8 @@ app.use((req, res, next) => {
   next();
 });
 
-const port = 3010;
+const port = process.env.BACKEND_PORT ? parseInt(process.env.BACKEND_PORT, 10) : 3010;
+const host = process.env.BACKEND_HOST || 'localhost';
 
 app.get('/', (req, res) => {
   res.send('Hola LTI!');
@@ -63,6 +80,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+app.listen(port, host, () => {
+  console.log(`Server is running at http://${host}:${port}`);
 });
