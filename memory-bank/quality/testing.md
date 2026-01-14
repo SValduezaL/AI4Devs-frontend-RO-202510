@@ -17,9 +17,15 @@
 
 ### Frontend
 
-❌ **Tests no detectados**
+✅ **Tests implementados**
 
-React Testing Library está instalado pero no se encontraron archivos de test en `frontend/src/`.
+**Framework**: Jest (via react-scripts) + React Testing Library 13.4.0 + jest-dom 5.17.0
+
+**Archivos de test detectados**:
+
+-   `frontend/src/features/positions/utils/positionUtils.test.ts`
+-   `frontend/src/features/positions/pages/PositionPage.test.tsx`
+-   `frontend/src/setupTests.ts` (configuración de jest-dom)
 
 ## Ejecutar tests
 
@@ -39,7 +45,14 @@ cd frontend
 npm test
 ```
 
-**Estado**: No hay tests para ejecutar actualmente
+**Estado**: 26 tests implementados (12 unitarios + 14 integración)
+
+**Ejecutar tests específicos**:
+
+```bash
+cd frontend
+npm test -- --testPathPattern="positionUtils.test|PositionPage.test" --watchAll=false
+```
 
 ## Estructura de tests
 
@@ -78,10 +91,12 @@ backend/src/
 -   Tests de servicios
 -   Tests de controladores
 
-**Frontend**: ❌ No implementados
+**Frontend**: ✅ Parcialmente implementados
 
--   Tests de componentes
--   Tests de servicios
+-   ✅ Tests de utilidades (positionUtils)
+-   ✅ Tests de integración (PositionPage)
+-   ⚠️ Tests de componentes individuales pendientes
+-   ⚠️ Tests de servicios pendientes
 
 ### Integration Tests
 
@@ -172,22 +187,31 @@ describe('CandidateService', () => {
 });
 ```
 
-### Frontend (sugerido)
+### Frontend (implementado)
 
 ```typescript
-// AddCandidateForm.test.tsx (ejemplo)
-import { render, screen, fireEvent } from "@testing-library/react";
-import AddCandidateForm from "./AddCandidateForm";
+// positionUtils.test.ts (ejemplo real)
+import { sortSteps, groupCandidatesByStep, createStepMap } from './positionUtils';
 
-describe("AddCandidateForm", () => {
-    it("should render form fields", () => {
-        render(<AddCandidateForm />);
-        expect(screen.getByLabelText(/nombre/i)).toBeInTheDocument();
+describe('positionUtils', () => {
+  describe('createStepMap', () => {
+    it('debe crear un mapa de nombre de step a ID', () => {
+      const steps = [...];
+      const stepMap = createStepMap(steps);
+      expect(stepMap.get('Initial Screening')).toBe(1);
     });
+  });
+});
 
-    it("should submit form with valid data", async () => {
-        // Test form submission
-    });
+// PositionPage.test.tsx (ejemplo real)
+import { render, screen } from '@testing-library/react';
+import PositionPage from './PositionPage';
+
+describe('PositionPage - Tests de Integración', () => {
+  it('debe renderizar el título de la posición', () => {
+    render(<PositionPage />);
+    expect(screen.getByText('Senior Backend Engineer')).toBeInTheDocument();
+  });
 });
 ```
 
@@ -233,7 +257,8 @@ npm test -- candidateService  # Ejecutar test específico
 ```bash
 cd frontend
 npm test -- --watch  # Modo watch
-npm test -- AddCandidateForm  # Test específico
+npm test -- --testPathPattern="positionUtils"  # Test específico
+npm test -- --watchAll=false  # Ejecutar una vez sin watch
 ```
 
 ## Preguntas al humano

@@ -86,6 +86,17 @@
 -   TypeScript compila sin errores
 -   Dependencias instaladas: @dnd-kit/core, @dnd-kit/sortable, axios
 
+✅ **Tests de frontend**
+
+-   Tests unitarios de utilidades (positionUtils.test.ts)
+-   12 tests para sortSteps, groupCandidatesByStep, createStepMap
+-   Cobertura de casos normales y edge cases
+-   Tests de integración (PositionPage.test.tsx)
+-   14 tests para renderizado, navegación y edge cases
+-   Mock de hooks y servicios para aislar componentes
+-   Configuración de setupTests.ts para jest-dom
+-   Script de test actualizado en package.json
+
 ### Infraestructura
 
 ✅ **Docker Compose**
@@ -161,11 +172,16 @@
 -   Algunos errores devuelven mensajes genéricos
 -   No hay códigos de error estructurados
 
-⚠️ **Tests de frontend**
+✅ **Tests de frontend**
 
--   Tests unitarios de utilidades pendientes (positionUtils)
--   Tests de integración DnD + API pendientes
--   Solo backend tiene cobertura completa de tests
+-   Tests unitarios de utilidades implementados (positionUtils.test.ts)
+-   12 tests para sortSteps, groupCandidatesByStep, createStepMap
+-   Cobertura de casos normales y edge cases
+-   Tests de integración implementados (PositionPage.test.tsx)
+-   14 tests para renderizado, navegación y edge cases
+-   Mock de hooks y servicios para aislar componentes
+-   Preparación para simulación de drag & drop
+-   Configuración de setupTests.ts para jest-dom
 
 ### Deuda técnica
 
@@ -338,14 +354,17 @@
 
 ## Métricas (si están disponibles)
 
--   **Tests**: 4 archivos de test en backend
+-   **Tests Backend**: 4 archivos de test
+-   **Tests Frontend**: 2 archivos de test (positionUtils.test.ts, PositionPage.test.tsx)
+-   26 tests totales (12 unitarios + 14 integración)
+-   Todos los tests pasando
 -   **Cobertura**: Desconocida (no hay reporte detectado)
 -   **Endpoints API**: 6 endpoints principales
 -   **Modelos de dominio**: 10 modelos Prisma
 -   **Componentes React**: 9 componentes principales (4 básicos + 5 de Position)
 -   **Hooks custom**: 2 hooks (usePositionData, useUpdateCandidateStage)
 -   **Servicios API**: 3 servicios (candidateService, positionService, apiClient)
--   **Dependencias frontend**: @dnd-kit/core, @dnd-kit/sortable, axios
+-   **Dependencias frontend**: @dnd-kit/core, @dnd-kit/sortable, axios, @testing-library/react, @testing-library/jest-dom
 
 ## Preguntas al humano
 

@@ -2,29 +2,39 @@
 
 ## En qué estamos ahora
 
-**Estado actual**: Implementación de página Position completada (2026-01-14)
+**Estado actual**: Tests de frontend implementados (2026-01-14)
 
-**Commit**: `0cc6287` - "feat: implementar página de detalle de posición con Kanban interactivo"
+**Commit**: `b84bec4` - "test: añadir tests unitarios e integración para página Position"
 
-**Última actividad**: Implementación completa de la página de detalle de posición (`/positions/:id`) con:
+**Última actividad**: Implementación completa de tests para la página Position:
 
 -   **Kanban interactivo** con drag & drop usando `@dnd-kit/core` y `@dnd-kit/sortable`
 -   **Integración completa con API**:
-    - `GET /position/:id/interviewflow` → Carga flujo de entrevistas
-    - `GET /position/:id/candidates` → Carga candidatos por posición
-    - `PUT /candidates/:id` → Actualiza etapa de candidato
--   **Optimistic UI** con rollback automático en caso de error
--   **Responsive design**: Desktop (grid horizontal) y móvil (columnas verticales <768px)
--   **Accesibilidad**: ARIA labels, keyboard navigation, screen reader support
--   **Estados UI**: Loading skeleton, error banners, empty states
--   **Arquitectura en capas**: features/domain/infrastructure según `frontend_best_practices.md`
--   **Cliente API centralizado**: `apiClient.ts` con axios e interceptores
--   **Normalización de datos**: Mapeo string→id, agrupación por etapa, ordenamiento
+    -   `GET /position/:id/interviewflow` → Carga flujo de entrevistas
+    -   `GET /position/:id/candidates` → Carga candidatos por posición
+    -   `PUT /candidates/:id` → Actualiza etapa de candidato
+-   **Tests unitarios de utilidades** (positionUtils.test.ts)
+-   12 tests para sortSteps, groupCandidatesByStep, createStepMap
+-   Cobertura de casos normales y edge cases (arrays vacíos, duplicados, etc.)
+-   **Tests de integración** (PositionPage.test.tsx)
+-   14 tests para renderizado, navegación y edge cases
+-   Mock de hooks (usePositionData, useUpdateCandidateStage) y servicios
+-   Preparación para simulación de drag & drop
+-   **Configuración de testing**
+-   setupTests.ts configurado para jest-dom
+-   Script de test actualizado en package.json para usar react-scripts
 
-**Pendiente**:
+**Estado anterior**: Implementación completa de la página de detalle de posición (`/positions/:id`) con:
 
--   Tests unitarios de utilidades (positionUtils)
--   Tests de integración (DnD + API)
+-   Kanban interactivo con drag & drop usando `@dnd-kit/core` y `@dnd-kit/sortable`
+-   Integración completa con API (GET /position/:id/interviewflow, GET /position/:id/candidates, PUT /candidates/:id)
+-   Optimistic UI con rollback automático en caso de error
+-   Responsive design: Desktop (grid horizontal) y móvil (columnas verticales <768px)
+-   Accesibilidad: ARIA labels, keyboard navigation, screen reader support
+-   Estados UI: Loading skeleton, error banners, empty states
+-   Arquitectura en capas: features/domain/infrastructure según `frontend_best_practices.md`
+-   Cliente API centralizado: `apiClient.ts` con axios e interceptores
+-   Normalización de datos: Mapeo string→id, agrupación por etapa, ordenamiento
 
 Este Memory Bank fue generado mediante análisis automático del código fuente del repositorio. La información contenida se basa en:
 
@@ -92,10 +102,10 @@ Este Memory Bank fue generado mediante análisis automático del código fuente 
     - Impacto: Mejor experiencia de usuario
     - Incertidumbre: Baja
 
-8. **Tests de frontend**
-    - Estado: No detectados (solo backend tiene tests)
-    - Impacto: Calidad y mantenibilidad
-    - Incertidumbre: Baja
+8. ~~**Tests de frontend**~~ ✅ **Completado**
+    - Estado: Implementados (26 tests: 12 unitarios + 14 integración)
+    - Archivos: positionUtils.test.ts, PositionPage.test.tsx
+    - Todos los tests pasando
 
 #### Baja prioridad (deuda técnica)
 
@@ -151,23 +161,28 @@ Este Memory Bank fue generado mediante análisis automático del código fuente 
 
 **Áreas de trabajo recientes**:
 
+-   ✅ **Tests de frontend implementados**
+    -   Tests unitarios: positionUtils.test.ts (12 tests)
+    -   Tests de integración: PositionPage.test.tsx (14 tests)
+    -   Configuración: setupTests.ts para jest-dom
+    -   Todos los tests pasando (26 tests totales)
 -   ✅ **Página Position completa** (`/positions/:id`)
-    - Componentes: PositionPage, PositionKanban, KanbanColumn, CandidateCard, PositionHeader
-    - Hooks: usePositionData, useUpdateCandidateStage
-    - Servicios: positionService, candidateService (extendido)
-    - Utilidades: normalización y agrupación de datos
+    -   Componentes: PositionPage, PositionKanban, KanbanColumn, CandidateCard, PositionHeader
+    -   Hooks: usePositionData, useUpdateCandidateStage
+    -   Servicios: positionService, candidateService (extendido)
+    -   Utilidades: normalización y agrupación de datos
 -   ✅ **Arquitectura frontend mejorada**
-    - Estructura en capas: features/domain/infrastructure
-    - Cliente API centralizado (apiClient.ts)
-    - Tipos TypeScript: position.types, position.dto
+    -   Estructura en capas: features/domain/infrastructure
+    -   Cliente API centralizado (apiClient.ts)
+    -   Tipos TypeScript: position.types, position.dto
 -   ✅ **Integración drag & drop**
-    - Librería: @dnd-kit (moderna, accesible)
-    - Optimistic UI con rollback
-    - Bloqueo durante actualizaciones
+    -   Librería: @dnd-kit (moderna, accesible)
+    -   Optimistic UI con rollback
+    -   Bloqueo durante actualizaciones
 -   ✅ **Documentación**
-    - GUIA_PRUEBAS_MANUALES.md (guía completa de testing)
-    - INICIAR_PROYECTO.md (quick start)
-    - NOTA_SOBRE_304.md (explicación de respuestas HTTP)
+    -   GUIA_PRUEBAS_MANUALES.md (guía completa de testing)
+    -   INICIAR_PROYECTO.md (quick start)
+    -   NOTA_SOBRE_304.md (explicación de respuestas HTTP)
 
 ## Preguntas críticas para el humano
 
