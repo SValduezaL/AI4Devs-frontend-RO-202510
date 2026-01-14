@@ -1,0 +1,109 @@
+---
+description: "Frontend engineering best practices - MANDATORY for frontend work"
+globs: ["frontend/**"]
+alwaysApply: true
+---
+
+# Frontend Engineering Standards
+
+## ⚠️ LECTURA OBLIGATORIA
+
+**ANTES de escribir o modificar CUALQUIER código en `frontend/src/**`, debes:\*\*
+
+1. **Leer completamente**: `memory-bank/frontend_best_practices.md`
+2. **Aplicar las convenciones** definidas en ese documento
+3. **Seguir los ejemplos Before/After** como referencia
+
+Este documento es la **fuente de verdad oficial** para:
+
+-   ✅ Estructura de carpetas y organización
+-   ✅ Convenciones de naming (componentes, hooks, servicios)
+-   ✅ Arquitectura en capas (UI / Features / Domain / Infrastructure)
+-   ✅ Patrones de diseño y principios SOLID
+-   ✅ Testing strategy
+-   ✅ Performance y accesibilidad
+
+## Reglas rápidas de referencia
+
+### Estructura de carpetas
+
+```
+frontend/src/
+├── ui/              # Componentes presentacionales puros
+├── features/        # Features organizadas por dominio
+│   └── candidates/
+│       ├── components/
+│       ├── hooks/
+│       └── types/
+├── domain/          # Tipos y lógica de dominio compartida
+└── infrastructure/  # Acceso a datos (API, servicios, adapters)
+```
+
+### Reglas de importación
+
+-   ✅ `ui/` → `domain/` (solo tipos)
+-   ✅ `features/` → `domain/`, `infrastructure/`, `ui/`
+-   ✅ `infrastructure/` → `domain/`
+-   ❌ `domain/` → NUNCA importa de otras capas
+-   ❌ `infrastructure/` → NUNCA importa de `features/` o `ui/`
+
+### Componentes
+
+-   **Presentacionales**: < 100 líneas, solo props y callbacks
+-   **Containers**: < 200 líneas, orquestan lógica via hooks
+-   **God Component**: > 300 líneas = REFACTORIZAR inmediatamente
+
+### Hooks
+
+-   Naming: `use` + sustantivo (`useCandidateForm`, `usePositions`)
+-   Ubicación: `features/{feature}/hooks/`
+-   Pueden importar: `domain/`, `infrastructure/`, otros hooks
+
+### Servicios y API
+
+-   **Cliente único**: Usar `apiClient` de `infrastructure/api/apiClient.ts`
+-   **NO mezclar**: `fetch` y `axios` (usar solo `apiClient`)
+-   **Adapters**: Siempre usar adapters para transformar DTO ↔ Domain
+-   **Tipos**: Usar tipos de `domain/`, nunca DTOs directamente en UI
+
+### Testing
+
+-   Ubicación: Mismo directorio que el archivo testado
+-   Naming: `*.test.tsx` o `*.test.js`
+-   Estructura: AAA (Arrange-Act-Assert)
+-   Filosofía: Testear comportamiento, no implementación
+
+## Checklist antes de commit
+
+-   [ ] ¿Leí `frontend_engineering_best_practices.md`?
+-   [ ] ¿Sigue la estructura de carpetas recomendada?
+-   [ ] ¿Respeta las reglas de importación entre capas?
+-   [ ] ¿El componente es < 300 líneas?
+-   [ ] ¿Usa `apiClient` en lugar de `fetch`/`axios` directo?
+-   [ ] ¿Tiene tests si es código crítico?
+-   [ ] ¿Compila sin errores TypeScript?
+
+## Violaciones comunes a evitar
+
+❌ **NO hacer**:
+
+-   Componentes > 300 líneas sin refactorizar
+-   Mezclar `fetch` y `axios`
+-   Importar DTOs directamente en componentes
+-   Lógica de negocio en componentes UI
+-   Datos mock en producción
+-   Estado global innecesario (usar hooks primero)
+
+✅ **SÍ hacer**:
+
+-   Separar Container/Presenter
+-   Usar hooks custom para lógica reutilizable
+-   Adapters para transformar datos
+-   Cliente API centralizado
+-   Tests de componentes críticos
+-   TypeScript estricto
+
+## Referencia completa
+
+Para detalles completos, ejemplos Before/After y explicaciones técnicas, consulta:
+**`memory-bank/frontend_best_practices.md`**

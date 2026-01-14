@@ -1,0 +1,104 @@
+---
+description: "Backend engineering best practices - MANDATORY for backend work"
+globs: ["backend/**"]
+alwaysApply: true
+---
+
+# Backend Engineering Standards
+
+## ⚠️ LECTURA OBLIGATORIA
+
+**ANTES de escribir o modificar CUALQUIER código en `backend/src/**`, debes:\*\*
+
+1. **Leer completamente**: `memory-bank/backend_best_practices.md`
+2. **Aplicar las convenciones** definidas en ese documento
+3. **Seguir los ejemplos Before/After** como referencia
+
+Este documento es la **fuente de verdad oficial** para:
+
+-   Arquitectura DDD y Clean Architecture
+-   Convenciones de entidades, repositorios, casos de uso
+-   Patrones SOLID aplicados a Backend
+-   Testing strategy
+-   Seguridad y observabilidad
+
+## Reglas rápidas de referencia
+
+### Estructura de carpetas
+
+```
+backend/src/
+├── domain/              # Entidades, Value Objects, Interfaces (puertos)
+├── application/         # Casos de uso, Validadores, DTOs
+├── infrastructure/       # Repositorios (adapters), Prisma, Storage
+└── presentation/         # Controllers, Middleware, DTOs de request
+```
+
+### Reglas de dependencias
+
+-   ✅ `presentation/` → `application/`, `domain/`
+-   ✅ `application/` → `domain/`
+-   ✅ `infrastructure/` → `domain/` (implementa interfaces)
+-   ❌ `domain/` → NUNCA importa de otras capas
+-   ❌ `application/` → NUNCA importa de `infrastructure/` directamente
+-   ❌ `presentation/` → NUNCA importa de `infrastructure/` directamente
+
+### Entidades y Repositorios
+
+-   **Entidades**: Solo lógica de negocio, sin dependencias de infraestructura
+-   **Repositorios**: Interfaces en `domain/`, implementaciones en `infrastructure/`
+-   **NO usar Prisma directamente** en entidades o casos de uso
+-   **Depender de interfaces**, no de implementaciones concretas
+
+### Casos de Uso
+
+-   Naming: `{Action}{Entity}UseCase` (ej: `CreateCandidateUseCase`)
+-   Una única responsabilidad por caso de uso
+-   Recibir DTOs, retornar entidades o DTOs
+-   Delegar validación a validadores
+-   Delegar persistencia a repositorios
+-   Usar transacciones para operaciones multi-entidad
+
+### Testing
+
+-   Ubicación: Mismo directorio que el archivo testado
+-   Naming: `*.test.ts`
+-   Estructura: AAA (Arrange-Act-Assert)
+-   **Unit tests**: Entidades, value objects, domain services (sin DB)
+-   **Integration tests**: Casos de uso, repositorios (con DB de test)
+
+## Checklist antes de commit
+
+-   [ ] ¿Leí `backend_best_practices.md`?
+-   [ ] ¿Sigue la estructura de carpetas recomendada?
+-   [ ] ¿Respeta las reglas de dependencias entre capas?
+-   [ ] ¿Las entidades NO importan Prisma?
+-   [ ] ¿Los casos de uso usan repositorios (interfaces), no Prisma directo?
+-   [ ] ¿Las operaciones multi-entidad usan transacciones?
+-   [ ] ¿Tiene tests si es código crítico?
+-   [ ] ¿Compila sin errores TypeScript?
+
+## Violaciones comunes a evitar
+
+❌ **NO hacer**:
+
+-   Importar `PrismaClient` en entidades de dominio
+-   Usar Prisma directamente en casos de uso
+-   Mezclar validación, lógica de negocio y persistencia en un solo servicio
+-   Operaciones multi-entidad sin transacciones
+-   Manejo de errores inconsistente
+-   Lógica de negocio en controllers
+
+✅ **SÍ hacer**:
+
+-   Separar entidades (dominio) de repositorios (infraestructura)
+-   Usar interfaces (puertos) en dominio, implementaciones (adapters) en infraestructura
+-   Casos de uso con una única responsabilidad
+-   Validadores separados de casos de uso
+-   Transacciones para operaciones atómicas
+-   Excepciones de dominio bien tipadas
+
+## Referencia completa
+
+Para detalles completos, ejemplos Before/After y explicaciones técnicas, consulta:
+**`memory-bank/backend_best_practices.md`**

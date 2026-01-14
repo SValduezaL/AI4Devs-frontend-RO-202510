@@ -1,5 +1,23 @@
 # System Patterns
 
+## 📚 Documentación de referencia
+
+### Backend
+
+**⚠️ IMPORTANTE**: Para trabajo en backend, consulta el documento oficial de Buenas Prácticas:
+
+-   **`memory-bank/backend_best_practices.md`** - Documento completo con arquitectura DDD, Clean Architecture, convenciones, patrones SOLID, ejemplos Before/After y reglas operativas específicas para el backend de este proyecto.
+
+Este documento complementa la información de arquitectura general contenida en este archivo con detalles específicos del backend.
+
+### Frontend
+
+**⚠️ IMPORTANTE**: Para trabajo en frontend, consulta el documento oficial de Buenas Prácticas:
+
+-   **`memory-bank/frontend_best_practices.md`** - Documento completo con arquitectura, convenciones, patrones SOLID, ejemplos Before/After y reglas operativas específicas para el frontend de este proyecto.
+
+Este documento complementa la información de arquitectura general contenida en este archivo con detalles específicos del frontend.
+
 ## Arquitectura
 
 **Tipo**: Monorepo con separación frontend/backend

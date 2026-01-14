@@ -6,6 +6,40 @@ alwaysApply: true
 
 # Engineering Standards
 
+## ⚠️ Documentación obligatoria por área
+
+### Backend
+
+**OBLIGATORIO**: Antes de trabajar en cualquier archivo del backend (`backend/src/**`), debes leer:
+
+1. `memory-bank/backend_best_practices.md` - **Documento oficial de Buenas Prácticas de Backend**
+
+Este documento contiene:
+
+-   Arquitectura DDD y Clean Architecture aplicada a este proyecto
+-   Convenciones de entidades, repositorios, casos de uso y controladores
+-   Patrones SOLID aplicados a Backend
+-   Ejemplos reales de violaciones y cómo corregirlas
+-   Reglas de testing, seguridad y observabilidad
+
+**No inventes convenciones**: Si hay dudas sobre cómo estructurar código backend, consulta este documento primero.
+
+### Frontend
+
+**OBLIGATORIO**: Antes de trabajar en cualquier archivo del frontend (`frontend/src/**`), debes leer:
+
+1. `memory-bank/frontend_best_practices.md` - **Documento oficial de Buenas Prácticas de Frontend**
+
+Este documento contiene:
+
+-   Arquitectura y estructura de carpetas recomendada
+-   Convenciones de componentes, hooks y servicios
+-   Patrones SOLID aplicados a Frontend
+-   Ejemplos reales de violaciones y cómo corregirlas
+-   Reglas de testing, performance y accesibilidad
+
+**No inventes convenciones**: Si hay dudas sobre cómo estructurar código frontend, consulta este documento primero.
+
 ## Convenciones del repositorio
 
 ### Naming
