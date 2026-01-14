@@ -183,6 +183,12 @@ Este Memory Bank fue generado mediante análisis automático del código fuente 
     -   GUIA_PRUEBAS_MANUALES.md (guía completa de testing)
     -   INICIAR_PROYECTO.md (quick start)
     -   NOTA_SOBRE_304.md (explicación de respuestas HTTP)
+    -   Prompts de documentación generados (prompts/):
+        -   prompts-frontend_tests.md (documentación de implementación de tests)
+        -   prompts-guias_buenas_practicas.md (documentación de creación de guías)
+        -   prompts-SVL.md (documentación de implementación de página Position)
+        -   prompt-memory_bank_generation.md (documentación de generación del Memory Bank)
+        -   prompt-optimize_env_configuration.md (documentación de optimización de configuración)
 
 ## Preguntas críticas para el humano
 

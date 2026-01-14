@@ -365,6 +365,12 @@
 -   **Hooks custom**: 2 hooks (usePositionData, useUpdateCandidateStage)
 -   **Servicios API**: 3 servicios (candidateService, positionService, apiClient)
 -   **Dependencias frontend**: @dnd-kit/core, @dnd-kit/sortable, axios, @testing-library/react, @testing-library/jest-dom
+-   **Documentación de prompts**: 5 archivos en `prompts/` documentando trabajo realizado:
+    -   prompts-frontend_tests.md (implementación de tests)
+    -   prompts-guias_buenas_practicas.md (creación de guías de buenas prácticas)
+    -   prompts-SVL.md (implementación de página Position)
+    -   prompt-memory_bank_generation.md (generación del Memory Bank)
+    -   prompt-optimize_env_configuration.md (optimización de configuración)
 
 ## Preguntas al humano
 
