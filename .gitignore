@@ -190,6 +190,9 @@ temp/
 # ============================================
 **/prompts_master.md
 
+# Scripts de utilidad local (OneDrive)
+**/fix-prisma-onedrive.ps1
+
 # ============================================
 # Archivos de respaldo y temporales
 # ============================================
