@@ -1,0 +1,146 @@
+---
+description: "Memory Bank mandatory workflow"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Mandatory Memory Bank Workflow
+
+## Obligatorio: Leer Memory Bank al inicio
+
+Antes de comenzar CUALQUIER tarea, debes leer estos archivos en orden:
+
+1. `memory-bank/projectbrief.md` - Entender qué es el proyecto y su alcance
+2. `memory-bank/productContext.md` - Entender el contexto del producto y flujos
+3. `memory-bank/systemPatterns.md` - Entender arquitectura y patrones
+4. `memory-bank/techContext.md` - Entender stack técnico y setup
+5. `memory-bank/activeContext.md` - Entender estado actual y próximos pasos
+6. `memory-bank/progress.md` - Entender qué funciona y qué falta
+
+## Cuándo actualizar el Memory Bank
+
+Actualiza el Memory Bank en estos casos:
+
+### Después de cambios significativos
+
+-   ✅ Implementación de nueva feature
+-   ✅ Cambios en arquitectura o patrones
+-   ✅ Añadir/eliminar dependencias importantes
+-   ✅ Cambios en estructura de carpetas
+-   ✅ Nuevos endpoints o cambios en API
+-   ✅ Cambios en modelo de datos (schema Prisma)
+
+### Cuando descubres nueva información
+
+-   ✅ Patrones o convenciones no documentadas
+-   ✅ Decisiones técnicas importantes
+-   ✅ Limitaciones o problemas conocidos
+-   ✅ Configuraciones especiales
+
+### Cuando se corrigen suposiciones
+
+-   ✅ Información marcada como "UNKNOWN" que se aclara
+-   ✅ Preguntas al humano que se responden
+-   ✅ Hipótesis que se confirman o refutan
+
+## Archivos a actualizar según el cambio
+
+### Cambios en funcionalidad
+
+-   `memory-bank/progress.md` - Actualizar "Qué funciona hoy"
+-   `memory-bank/domains/key-flows.md` - Añadir/actualizar flujos
+-   `memory-bank/interfaces/api.md` - Si afecta API
+
+### Cambios en arquitectura
+
+-   `memory-bank/systemPatterns.md` - Actualizar patrones
+-   `memory-bank/architecture/overview.md` - Actualizar diagramas
+-   `memory-bank/architecture/diagrams.md` - Actualizar diagramas Mermaid
+
+### Cambios técnicos
+
+-   `memory-bank/techContext.md` - Actualizar stack/dependencias
+-   `memory-bank/ops/local-dev.md` - Si cambia setup
+-   `memory-bank/ops/deployment.md` - Si cambia deployment
+
+### Cambios en estado del proyecto
+
+-   `memory-bank/activeContext.md` - Actualizar "En qué estamos ahora"
+-   `memory-bank/progress.md` - Actualizar TODOs y quick wins
+
+### Decisiones importantes
+
+-   `memory-bank/decisions/ADR-XXXX-*.md` - Crear nuevo ADR
+
+## Disciplina de output
+
+### No inventar información
+
+-   ❌ **NO** inventes features que no existen
+-   ❌ **NO** asumas configuraciones no detectadas
+-   ❌ **NO** documentes código que no has visto
+
+### Marcar incertidumbre
+
+-   ✅ Usa **"UNKNOWN"** cuando algo no se puede inferir del código
+-   ✅ Usa **"Preguntas al humano"** para información crítica faltante
+-   ✅ Marca como **"Inferido"** o **"Probablemente"** cuando hay incertidumbre
+
+### Mantener actualizado
+
+-   ✅ `activeContext.md` debe reflejar el estado actual
+-   ✅ `progress.md` debe reflejar qué funciona y qué falta
+-   ✅ Eliminar información obsoleta cuando se actualiza
+
+## Ejemplos de actualizaciones
+
+### Ejemplo 1: Nueva feature implementada
+
+**Cambio**: Se implementa autenticación con JWT
+
+**Archivos a actualizar**:
+
+1. `progress.md` - Añadir a "Qué funciona hoy"
+2. `interfaces/api.md` - Documentar endpoints de auth
+3. `systemPatterns.md` - Añadir patrón de autenticación
+4. `activeContext.md` - Actualizar "En qué estamos ahora"
+5. `decisions/ADR-0002-jwt-auth.md` - Crear ADR
+
+### Ejemplo 2: Nueva dependencia añadida
+
+**Cambio**: Se añade Redis para cache
+
+**Archivos a actualizar**:
+
+1. `techContext.md` - Añadir Redis a stack y dependencias
+2. `ops/local-dev.md` - Añadir instrucciones de setup de Redis
+3. `ops/deployment.md` - Añadir Redis a requisitos de deployment
+4. `systemPatterns.md` - Documentar uso de cache
+
+### Ejemplo 3: Corrección de suposición
+
+**Cambio**: Se confirma que hay CI/CD configurado (fuera del repo)
+
+**Archivos a actualizar**:
+
+1. `ops/deployment.md` - Actualizar sección de CI/CD
+2. `activeContext.md` - Eliminar pregunta sobre CI/CD
+3. `projectbrief.md` - Actualizar si afecta Definition of Done
+
+## Checklist antes de terminar tarea
+
+-   [ ] ¿Leí el Memory Bank al inicio?
+-   [ ] ¿Actualicé el Memory Bank si hice cambios significativos?
+-   [ ] ¿Marqué como UNKNOWN lo que no sé?
+-   [ ] ¿Actualicé activeContext.md y progress.md si aplica?
+
+## Preguntas frecuentes
+
+**Q: ¿Debo actualizar el Memory Bank en cada cambio pequeño?**  
+A: No, solo en cambios significativos. Un cambio de texto en un componente no requiere actualización, pero añadir un nuevo endpoint sí.
+
+**Q: ¿Qué hago si encuentro información contradictoria?**  
+A: Documenta ambas versiones y marca como "CONFLICTO" o pregunta al humano.
+
+**Q: ¿Debo crear ADRs para todas las decisiones?**  
+A: Solo para decisiones arquitectónicas importantes o que afecten múltiples partes del sistema.

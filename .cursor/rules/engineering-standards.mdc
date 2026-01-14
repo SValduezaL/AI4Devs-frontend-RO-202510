@@ -1,0 +1,245 @@
+---
+description: "Engineering standards and conventions"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Engineering Standards
+
+## Convenciones del repositorio
+
+### Naming
+
+#### Backend (TypeScript)
+
+-   **Archivos**: camelCase para servicios/controllers (`candidateService.ts`), PascalCase para modelos (`Candidate.ts`)
+-   **Clases**: PascalCase (`Candidate`, `CandidateService`)
+-   **Funciones**: camelCase (`addCandidate`, `findCandidateById`)
+-   **Constantes**: UPPER_SNAKE_CASE (si se usan)
+-   **Interfaces/Types**: PascalCase (`CandidateData`, `ApiResponse`)
+
+#### Frontend (React/TypeScript/JavaScript)
+
+-   **Componentes**: PascalCase (`RecruiterDashboard`, `AddCandidateForm`)
+-   **Archivos de componentes**: PascalCase o camelCase (consistencia pendiente)
+-   **Hooks**: camelCase con prefijo `use` (`useCandidates`, `usePosition`)
+-   **Servicios**: camelCase (`candidateService.js`)
+-   **Utilidades**: camelCase (`api.ts`, `utils.ts`)
+
+#### Base de datos (Prisma)
+
+-   **Modelos**: PascalCase (`Candidate`, `Position`)
+-   **Campos**: camelCase (`firstName`, `currentInterviewStep`)
+-   **Relaciones**: Nombres descriptivos en plural (`educations`, `workExperiences`)
+
+### Estructura de carpetas
+
+#### Backend
+
+```
+backend/src/
+├── domain/          # Modelos de dominio (DDD)
+├── application/     # Servicios y lógica de aplicación (DDD)
+├── infrastructure/  # Acceso a datos, sistemas externos (DDD)
+├── presentation/    # Controladores (DDD)
+└── routes/          # Definición de rutas Express
+```
+
+#### Frontend
+
+```
+frontend/src/
+├── components/      # Componentes React
+├── services/        # Servicios de API
+├── config/          # Configuración
+└── assets/         # Imágenes, etc.
+```
+
+### Tests
+
+-   **Ubicación**: Junto al archivo que testea (mismo directorio)
+-   **Naming**: `*.test.ts` (backend), `*.test.js` o `*.test.tsx` (frontend)
+-   **Estructura**: Arrange-Act-Assert (AAA)
+
+### Commits
+
+**Estado**: No hay convención detectada
+
+**Recomendado**: Conventional Commits
+
+```
+feat: añadir autenticación JWT
+fix: corregir validación de email
+docs: actualizar README
+refactor: reorganizar servicios
+test: añadir tests de candidatos
+```
+
+## Zonas "don't touch" (si hay)
+
+**No detectadas en código actual**
+
+**Recomendado documentar**:
+
+-   Código legacy que se planea refactorizar
+-   Dependencias que no se pueden actualizar
+-   Configuraciones específicas de cliente
+
+## Testing
+
+### Estrategia
+
+-   **Backend**: Tests unitarios de servicios y controladores (implementado)
+-   **Frontend**: Tests de componentes (pendiente)
+-   **Integración**: Tests de endpoints (pendiente)
+-   **E2E**: Tests de flujos completos (pendiente)
+
+### Test-first o no
+
+**Estado actual**: Test-after (tests añadidos después del código)
+
+**Recomendado**: Test-driven development (TDD) para nueva funcionalidad crítica
+
+### Cobertura
+
+**Estado**: Desconocida
+
+**Recomendado**: 80%+ para código crítico (servicios, modelos de dominio)
+
+## Cómo proponer cambios
+
+### Proceso recomendado
+
+1. **Plan**
+
+    - Documentar qué se va a cambiar y por qué
+    - Identificar archivos afectados
+    - Considerar impacto en otras partes
+
+2. **Implementación**
+
+    - Seguir convenciones del proyecto
+    - Añadir tests si aplica
+    - Verificar que compila y tests pasan
+
+3. **Documentación**
+
+    - Actualizar Memory Bank si es cambio significativo
+    - Actualizar comentarios en código si es necesario
+    - Actualizar API spec si afecta endpoints
+
+4. **Review**
+    - Verificar que sigue patrones del proyecto
+    - Verificar que no rompe funcionalidad existente
+    - Verificar que tests pasan
+
+### Checklist para cambios
+
+-   [ ] ¿Sigue las convenciones de naming?
+-   [ ] ¿Está en la carpeta correcta según arquitectura?
+-   [ ] ¿Tiene tests si es código crítico?
+-   [ ] ¿Compila sin errores?
+-   [ ] ¿Tests pasan?
+-   [ ] ¿Memory Bank actualizado (si aplica)?
+-   [ ] ¿API spec actualizada (si aplica)?
+
+## Linting y Formatting
+
+### Backend
+
+-   **ESLint**: Configurado (v9.2.0)
+-   **Prettier**: Configurado (v3.2.5)
+-   **Ejecutar antes de commit**: Recomendado
+
+### Frontend
+
+-   **ESLint**: Configurado (via Create React App)
+-   **Prettier**: No detectado explícitamente
+-   **Ejecutar antes de commit**: Recomendado
+
+### Pre-commit hooks
+
+**Estado**: No configurado
+
+**Recomendado**: Husky + lint-staged para ejecutar linters antes de commit
+
+## Code Review Guidelines
+
+### Qué revisar
+
+1. **Funcionalidad**: ¿Hace lo que se supone que debe hacer?
+2. **Tests**: ¿Tiene tests adecuados?
+3. **Convenciones**: ¿Sigue convenciones del proyecto?
+4. **Arquitectura**: ¿Respeta separación de capas (DDD)?
+5. **Performance**: ¿Hay problemas de performance obvios?
+6. **Seguridad**: ¿Hay vulnerabilidades obvias?
+7. **Documentación**: ¿Está documentado si es necesario?
+
+### Comentarios en reviews
+
+-   **Constructivos**: Explicar por qué, no solo qué
+-   **Específicos**: Referenciar líneas de código
+-   **Sugerencias**: Proponer alternativas cuando sea posible
+
+## Manejo de dependencias
+
+### Añadir dependencias
+
+1. **Justificar**: ¿Por qué se necesita?
+2. **Investigar**: ¿Hay alternativas? ¿Está mantenida?
+3. **Actualizar**: `package.json` y ejecutar `npm install`
+4. **Documentar**: Añadir a `techContext.md` si es significativa
+
+### Actualizar dependencias
+
+1. **Verificar**: Changelog y breaking changes
+2. **Probar**: Ejecutar tests después de actualizar
+3. **Documentar**: Actualizar versiones en `techContext.md`
+
+## Manejo de errores
+
+### Backend
+
+-   **Try-catch**: En servicios y controladores
+-   **Errores HTTP**: Status codes apropiados (400, 404, 500)
+-   **Mensajes**: Descriptivos pero sin exponer detalles internos
+-   **Logging**: Registrar errores para debugging
+
+### Frontend
+
+-   **Error boundaries**: Para errores de React
+-   **Manejo de API errors**: Mostrar mensajes amigables al usuario
+-   **Logging**: Console.error para debugging (en desarrollo)
+
+## Performance
+
+### Backend
+
+-   **Queries**: Usar `include` de Prisma eficientemente (evitar N+1)
+-   **Paginación**: Implementar para listados grandes
+-   **Caching**: Considerar para datos que no cambian frecuentemente
+
+### Frontend
+
+-   **Lazy loading**: Para componentes grandes
+-   **Memoization**: Para componentes que se re-renderizan frecuentemente
+-   **Code splitting**: Para reducir bundle size
+
+## Seguridad
+
+### Checklist básico
+
+-   [ ] Validación de inputs en backend
+-   [ ] Sanitización de datos de usuario
+-   [ ] No exponer secrets en código
+-   [ ] CORS configurado apropiadamente
+-   [ ] Rate limiting (pendiente)
+-   [ ] Autenticación (pendiente)
+
+## Preguntas al humano
+
+-   ¿Hay convenciones de commit messages establecidas?
+-   ¿Hay proceso de code review formal?
+-   ¿Hay requisitos de cobertura de tests?
+-   ¿Hay políticas sobre actualización de dependencias?
+-   ¿Hay guías de estilo adicionales?
