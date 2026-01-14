@@ -23,6 +23,8 @@
 -   **UI Library**: Bootstrap 5.3.3 + React Bootstrap 2.10.2
 -   **Icons**: React Bootstrap Icons 1.11.4
 -   **Date picker**: React Datepicker 6.9.0
+-   **Drag & Drop**: @dnd-kit/core 6.3.1 + @dnd-kit/sortable 10.0.0
+-   **HTTP Client**: axios (instalado para apiClient centralizado)
 -   **Testing**: Jest + React Testing Library
 -   **Environment**: dotenv-cli 7.4.2
 
@@ -59,6 +61,9 @@
 | `react-bootstrap`  | ^2.10.2 | Componentes Bootstrap para React |
 | `bootstrap`        | ^5.3.3  | Framework CSS                    |
 | `react-datepicker` | ^6.9.0  | Selector de fechas               |
+| `@dnd-kit/core`    | ^6.3.1  | Librería drag & drop moderna     |
+| `@dnd-kit/sortable`| ^10.0.0 | Extensión sortable para @dnd-kit |
+| `axios`             | (nueva) | Cliente HTTP para API            |
 | `dotenv-cli`       | ^7.4.2  | Carga de .env en scripts npm     |
 
 ## Setup local exacto

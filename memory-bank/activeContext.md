@@ -4,13 +4,22 @@
 
 **Estado actual**: Implementación de página Position completada (2026-01-14)
 
+**Commit**: `0cc6287` - "feat: implementar página de detalle de posición con Kanban interactivo"
+
 **Última actividad**: Implementación completa de la página de detalle de posición (`/positions/:id`) con:
 
--   Kanban interactivo con drag & drop
--   Integración con API (GET interviewFlow, GET candidates, PUT updateStage)
--   Optimistic UI con rollback
--   Responsive design (móvil y desktop)
--   Accesibilidad básica (ARIA, keyboard navigation)
+-   **Kanban interactivo** con drag & drop usando `@dnd-kit/core` y `@dnd-kit/sortable`
+-   **Integración completa con API**:
+    - `GET /position/:id/interviewflow` → Carga flujo de entrevistas
+    - `GET /position/:id/candidates` → Carga candidatos por posición
+    - `PUT /candidates/:id` → Actualiza etapa de candidato
+-   **Optimistic UI** con rollback automático en caso de error
+-   **Responsive design**: Desktop (grid horizontal) y móvil (columnas verticales <768px)
+-   **Accesibilidad**: ARIA labels, keyboard navigation, screen reader support
+-   **Estados UI**: Loading skeleton, error banners, empty states
+-   **Arquitectura en capas**: features/domain/infrastructure según `frontend_best_practices.md`
+-   **Cliente API centralizado**: `apiClient.ts` con axios e interceptores
+-   **Normalización de datos**: Mapeo string→id, agrupación por etapa, ordenamiento
 
 **Pendiente**:
 
@@ -140,12 +149,25 @@ Este Memory Bank fue generado mediante análisis automático del código fuente 
 -   Tests unitarios en backend presentes y estructurados
 -   Estructura DDD implementada en backend
 
-**Áreas de trabajo recientes** (inferidas):
+**Áreas de trabajo recientes**:
 
--   Implementación de modelos de dominio (Candidate, Position, etc.)
--   Servicios de aplicación (candidateService, positionService)
--   Controladores y rutas REST
--   Componentes React básicos (Dashboard, Forms)
+-   ✅ **Página Position completa** (`/positions/:id`)
+    - Componentes: PositionPage, PositionKanban, KanbanColumn, CandidateCard, PositionHeader
+    - Hooks: usePositionData, useUpdateCandidateStage
+    - Servicios: positionService, candidateService (extendido)
+    - Utilidades: normalización y agrupación de datos
+-   ✅ **Arquitectura frontend mejorada**
+    - Estructura en capas: features/domain/infrastructure
+    - Cliente API centralizado (apiClient.ts)
+    - Tipos TypeScript: position.types, position.dto
+-   ✅ **Integración drag & drop**
+    - Librería: @dnd-kit (moderna, accesible)
+    - Optimistic UI con rollback
+    - Bloqueo durante actualizaciones
+-   ✅ **Documentación**
+    - GUIA_PRUEBAS_MANUALES.md (guía completa de testing)
+    - INICIAR_PROYECTO.md (quick start)
+    - NOTA_SOBRE_304.md (explicación de respuestas HTTP)
 
 ## Preguntas críticas para el humano
 

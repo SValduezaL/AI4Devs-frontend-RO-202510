@@ -14,10 +14,10 @@
 
 -   `POST /candidates` - Crear candidato
 -   `GET /candidates/:id` - Obtener candidato por ID
--   `PUT /candidates/:id` - Actualizar etapa de entrevista
+-   `PUT /candidates/:id` - Actualizar etapa de entrevista (requiere `applicationId` y `currentInterviewStep` como ID numérico)
 -   `POST /upload` - Subir archivo CV (PDF/DOCX)
--   `GET /position/:id/candidates` - Candidatos por posición
--   `GET /position/:id/interviewflow` - Flujo de entrevistas de posición
+-   `GET /position/:id/candidates` - Candidatos por posición (retorna `currentInterviewStep` como string)
+-   `GET /position/:id/interviewflow` - Flujo de entrevistas de posición (retorna wrapper `{ interviewFlow: {...} }`)
 
 ✅ **Base de datos**
 
@@ -52,8 +52,10 @@
 ✅ **Aplicación React funcionando**
 
 -   Puerto: 3000 (default de Create React App)
--   React Router configurado
--   Bootstrap UI funcionando
+-   React Router DOM 6.23.1 configurado
+-   Bootstrap 5.3.3 + React Bootstrap 2.10.2 funcionando
+-   Arquitectura en capas implementada (UI/Features/Domain/Infrastructure)
+-   Cliente API centralizado (apiClient.ts con axios)
 
 ✅ **Componentes implementados**
 
@@ -81,6 +83,8 @@
 
 -   Build exitoso en `frontend/build/`
 -   Assets generados correctamente
+-   TypeScript compila sin errores
+-   Dependencias instaladas: @dnd-kit/core, @dnd-kit/sortable, axios
 
 ### Infraestructura
 
@@ -159,8 +163,9 @@
 
 ⚠️ **Tests de frontend**
 
--   No hay tests detectados en frontend
--   Solo backend tiene cobertura de tests
+-   Tests unitarios de utilidades pendientes (positionUtils)
+-   Tests de integración DnD + API pendientes
+-   Solo backend tiene cobertura completa de tests
 
 ### Deuda técnica
 
@@ -337,7 +342,10 @@
 -   **Cobertura**: Desconocida (no hay reporte detectado)
 -   **Endpoints API**: 6 endpoints principales
 -   **Modelos de dominio**: 10 modelos Prisma
--   **Componentes React**: 4 componentes principales
+-   **Componentes React**: 9 componentes principales (4 básicos + 5 de Position)
+-   **Hooks custom**: 2 hooks (usePositionData, useUpdateCandidateStage)
+-   **Servicios API**: 3 servicios (candidateService, positionService, apiClient)
+-   **Dependencias frontend**: @dnd-kit/core, @dnd-kit/sortable, axios
 
 ## Preguntas al humano
 

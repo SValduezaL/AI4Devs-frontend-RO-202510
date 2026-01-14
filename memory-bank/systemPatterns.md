@@ -172,20 +172,30 @@ App.tsx (Router)
   ├── AddCandidateForm
   │   ├── FileUploader
   │   └── candidateService → API
-  └── Positions
-      └── candidateService → API
+  ├── Positions
+  │   └── candidateService → API
+  └── PositionPage (/positions/:id)
+      ├── PositionHeader
+      └── PositionKanban
+          ├── KanbanColumn[] (droppable)
+          │   └── CandidateCard[] (draggable)
+          └── usePositionData → positionService
+              ├── fetchInterviewFlow
+              └── fetchCandidates
+          └── useUpdateCandidateStage → candidateService.updateStage
 ```
 
 ### Comunicación Frontend-Backend
 
 -   **API Base URL**: Configurada en `frontend/src/config/api.ts`
+-   **Cliente API**: Centralizado en `frontend/src/infrastructure/api/apiClient.ts` (axios)
 -   **Endpoints principales**:
     -   `POST /candidates` - Crear candidato
     -   `GET /candidates/:id` - Obtener candidato
-    -   `PUT /candidates/:id` - Actualizar etapa
+    -   `PUT /candidates/:id` - Actualizar etapa de entrevista (requiere `applicationId` y `currentInterviewStep` como ID numérico)
     -   `POST /upload` - Subir CV
-    -   `GET /position/:id/candidates` - Candidatos por posición
-    -   `GET /position/:id/interviewflow` - Flujo de entrevistas
+    -   `GET /position/:id/candidates` - Candidatos por posición (retorna `currentInterviewStep` como string)
+    -   `GET /position/:id/interviewflow` - Flujo de entrevistas (retorna wrapper `{ interviewFlow: {...} }`)
 
 ## Diagrama de arquitectura (Mermaid)
 

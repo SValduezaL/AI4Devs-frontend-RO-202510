@@ -142,68 +142,170 @@
 
 ---
 
-### 3. Flujo: Actualizar etapa de entrevista
+### 3. Flujo: Ver detalle de posición con Kanban
 
 **Actor**: Reclutador
 
 **Precondiciones**:
 
--   Candidato existe
--   Aplicación existe para candidato y posición
+-   Posición existe en sistema
+-   Posición tiene `interviewFlow` configurado
+-   Candidatos han aplicado a la posición
+
+**Pasos**:
+
+1. **Usuario navega a posiciones**
+
+    - Click en "Ir a Posiciones" en dashboard
+    - React Router navega a `/positions`
+    - `Positions` component se renderiza
+
+2. **Usuario selecciona posición**
+
+    - Click en botón "Ver proceso" de una posición
+    - React Router navega a `/positions/:id`
+    - `PositionPage` se renderiza
+
+3. **Sistema carga datos**
+
+    - `usePositionData` hook se ejecuta
+    - Carga en paralelo:
+        - `GET /position/:id/interviewflow` → `fetchInterviewFlow()`
+        - `GET /position/:id/candidates` → `fetchCandidates()`
+
+4. **Normalización de datos**
+
+    - `createStepMap()`: Crea mapa `stepName → stepId`
+    - `sortSteps()`: Ordena steps por `orderIndex` (fallback por `id`)
+    - `groupCandidatesByStep()`: Agrupa candidatos por `stepId`
+
+5. **Renderizado del Kanban**
+
+    - `PositionKanban` renderiza columnas (una por cada `InterviewStep`)
+    - `KanbanColumn` renderiza candidatos en cada columna
+    - `CandidateCard` muestra nombre y puntuación de cada candidato
+
+6. **Usuario ve Kanban**
+    - Columnas ordenadas por `orderIndex`
+    - Candidatos agrupados en columnas correctas
+    - Header muestra título de posición y botón "volver"
+
+**Casos de error**:
+
+-   Posición no encontrada → Error 404
+-   Sin `interviewFlow` → Alert: "No hay etapas configuradas"
+-   Error de red → Alert rojo con mensaje de error
+
+**Archivos involucrados**:
+
+-   `frontend/src/features/positions/pages/PositionPage.tsx`
+-   `frontend/src/features/positions/components/PositionKanban.tsx`
+-   `frontend/src/features/positions/components/KanbanColumn.tsx`
+-   `frontend/src/features/positions/components/CandidateCard.tsx`
+-   `frontend/src/features/positions/hooks/usePositionData.ts`
+-   `frontend/src/infrastructure/services/positionService.ts`
+-   `frontend/src/features/positions/utils/positionUtils.ts`
+-   `backend/src/routes/positionRoutes.ts`
+-   `backend/src/presentation/controllers/positionController.ts`
+
+---
+
+### 4. Flujo: Actualizar etapa de entrevista (Drag & Drop)
+
+**Actor**: Reclutador
+
+**Precondiciones**:
+
+-   Usuario está en página Position (`/positions/:id`)
+-   Kanban está cargado y visible
+-   Candidato existe en una columna
 -   Nueva etapa existe en flujo de entrevistas
 
 **Pasos**:
 
-1. **Usuario selecciona candidato**
+1. **Usuario inicia drag**
 
-    - Desde lista de candidatos por posición
-    - O desde detalle de candidato
+    - Click y arrastra tarjeta de candidato (`CandidateCard`)
+    - `@dnd-kit` detecta inicio de drag
+    - Tarjeta se vuelve semi-transparente (opacity 0.5)
+    - Cursor cambia a "grabbing"
 
-2. **Usuario actualiza etapa**
+2. **Usuario arrastra sobre otra columna**
 
-    - Selecciona nueva etapa de dropdown/select
-    - Click en "Actualizar"
+    - Pasa tarjeta sobre `KanbanColumn` diferente
+    - `useDroppable` detecta hover
+    - Columna se resalta (borde azul, fondo claro)
 
-3. **Frontend envía**
+3. **Usuario suelta tarjeta**
 
-    - `PUT /candidates/:id`
-    - Body: `{ applicationId, currentInterviewStep }`
+    - `handleDragEnd` se ejecuta en `PositionKanban`
+    - Extrae `candidateId` y `newStepId` del evento
 
-4. **Backend procesa**
+4. **Optimistic Update**
+
+    - `handleMoveCandidate` en `PositionPage` se ejecuta
+    - Guarda estado anterior para rollback
+    - Actualiza `candidatesByStep` inmediatamente:
+        - Remueve candidato de columna antigua
+        - Añade candidato a columna nueva
+    - UI se actualiza instantáneamente
+
+5. **Llamada a API**
+
+    - `useUpdateCandidateStage.updateStage()` se ejecuta
+    - Envía `PUT /candidates/:id`
+    - Body: `{ applicationId: number, currentInterviewStep: number }`
+    - `currentInterviewStep` es el **ID numérico** del step (no el nombre)
+
+6. **Backend procesa**
 
     - `candidateRoutes` recibe request
-    - `candidateController.updateCandidateStage()` invocado
+    - `candidateController.updateCandidateStageController()` invocado
     - `candidateService.updateCandidateStage()` ejecuta:
         - Busca aplicación por `applicationId` y `candidateId`
         - Valida que etapa existe en flujo
-        - Actualiza `currentInterviewStep`
+        - Actualiza `currentInterviewStep` (ID numérico)
         - Guarda aplicación
 
-5. **Respuesta**
+7. **Respuesta**
 
-    - Backend retorna 200 con aplicación actualizada
-    - Incluye entrevistas asociadas con fechas y puntuaciones
+    - **Si éxito (200)**:
+        - Optimistic update se mantiene (ya está actualizado)
+        - No hay cambio visual adicional
+    - **Si error (400/404/500)**:
+        - Rollback automático: `candidatesByStep` vuelve a estado anterior
+        - Alert rojo muestra mensaje de error
+        - Candidato vuelve a columna original
 
-6. **Frontend actualiza**
-    - UI refleja nueva etapa
-    - Usuario ve confirmación
+8. **Bloqueo durante actualización**
+
+    - Flag `isUpdating` bloquea nuevos drags
+    - `CandidateCard` se deshabilita (`isDisabled={isUpdating}`)
+    - Evita múltiples actualizaciones simultáneas
 
 **Casos de error**:
 
--   Aplicación no encontrada → Error 404
--   Etapa inválida → Error 400
--   Error de DB → Error 500
+-   Candidato no encontrado → Rollback + Error: "Candidato no encontrado"
+-   Etapa no válida → Rollback + Error: "Etapa no válida"
+-   Aplicación no encontrada → Rollback + Error 404
+-   Error de red → Rollback + Error: "Error al actualizar la etapa"
+-   Mover a misma columna → No se envía petición (early return)
 
 **Archivos involucrados**:
 
+-   `frontend/src/features/positions/pages/PositionPage.tsx`
+-   `frontend/src/features/positions/components/PositionKanban.tsx`
+-   `frontend/src/features/positions/components/KanbanColumn.tsx`
+-   `frontend/src/features/positions/components/CandidateCard.tsx`
+-   `frontend/src/features/positions/hooks/useUpdateCandidateStage.ts`
+-   `frontend/src/infrastructure/services/candidateService.ts`
 -   `backend/src/routes/candidateRoutes.ts`
 -   `backend/src/presentation/controllers/candidateController.ts`
 -   `backend/src/application/services/candidateService.ts`
--   `backend/src/domain/models/Application.ts`
 
 ---
 
-### 4. Flujo: Subir CV
+### 5. Flujo: Subir CV
 
 **Actor**: Reclutador
 
@@ -257,7 +359,7 @@
 
 ## Flujos no implementados (detectados en modelos)
 
-### 5. Flujo: Crear posición (backend existe, frontend no)
+### 6. Flujo: Crear posición (backend existe, frontend no)
 
 **Estado**: Backend tiene modelos y probablemente servicios, pero no hay UI detectada.
 
@@ -281,7 +383,7 @@
 4. Guarda flujo
 5. Flujo disponible para asignar a posiciones
 
-### 7. Flujo: Registrar entrevista (backend existe, frontend no)
+### 8. Flujo: Registrar entrevista (backend existe, frontend no)
 
 **Estado**: Modelo `Interview` existe, pero no hay UI para crear entrevistas.
 

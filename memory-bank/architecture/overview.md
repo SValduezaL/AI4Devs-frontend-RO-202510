@@ -6,10 +6,11 @@ El sistema LTI sigue una **arquitectura en capas** con separación clara entre f
 
 ## Estilo arquitectónico
 
--   **Backend**: Monolito modular con capas DDD
--   **Frontend**: SPA (Single Page Application) con React
+-   **Backend**: Monolito modular con capas DDD (Domain-Driven Design)
+-   **Frontend**: SPA (Single Page Application) con React, arquitectura en capas (UI/Features/Domain/Infrastructure)
 -   **Comunicación**: REST API (JSON over HTTP)
 -   **Persistencia**: PostgreSQL con Prisma ORM
+-   **Drag & Drop**: @dnd-kit (moderna, accesible, compatible con React 18)
 
 ## Componentes principales
 
@@ -45,13 +46,36 @@ El sistema LTI sigue una **arquitectura en capas** con separación clara entre f
 
 ```
 ┌─────────────────────────────────────────┐
-│         React Components                │
-│  (UI, Forms, Dashboards)               │
+│         UI Layer (Presentación)         │
+│  (Components Presentacionales)          │
+│  - PositionHeader                       │
+│  - CandidateCard                        │
+│  - LoadingSkeleton                      │
 └──────────────┬──────────────────────────┘
                │
 ┌──────────────▼──────────────────────────┐
-│         Services Layer                  │
-│  (API Calls, Data Fetching)            │
+│      Features Layer (Casos de Uso)      │
+│  (Containers, Hooks, Lógica Feature)   │
+│  - PositionPage                         │
+│  - PositionKanban                       │
+│  - usePositionData                      │
+│  - useUpdateCandidateStage              │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│      Domain Layer (Tipos/Entidades)     │
+│  (Tipos compartidos, Validadores)      │
+│  - position.types.ts                    │
+│  - positionUtils.ts                     │
+└──────────────┬──────────────────────────┘
+               │
+┌──────────────▼──────────────────────────┐
+│   Infrastructure Layer (Acceso Datos)  │
+│  (API Client, Servicios, Adapters)     │
+│  - apiClient.ts                         │
+│  - positionService.ts                  │
+│  - candidateService.ts                  │
+│  - position.dto.ts                      │
 └──────────────┬──────────────────────────┘
                │
 ┌──────────────▼──────────────────────────┐
@@ -106,6 +130,39 @@ El sistema LTI sigue una **arquitectura en capas** con separación clara entre f
 8. UI renderiza datos
 ```
 
+### Ver detalle de posición con Kanban
+
+```
+1. Usuario navega a /positions/:id
+   ↓
+2. PositionPage se monta → usePositionData hook
+   ↓
+3. Carga en paralelo:
+   - fetchInterviewFlow() → GET /position/:id/interviewflow
+   - fetchCandidates() → GET /position/:id/candidates
+   ↓
+4. Normalización de datos:
+   - createStepMap() → mapea stepName → stepId
+   - sortSteps() → ordena por orderIndex
+   - groupCandidatesByStep() → agrupa por stepId
+   ↓
+5. PositionKanban renderiza:
+   - Columnas (una por InterviewStep)
+   - Candidatos en cada columna
+   ↓
+6. Usuario hace drag & drop:
+   - handleDragEnd() detecta movimiento
+   - Optimistic update (UI inmediata)
+   - updateStage() → PUT /candidates/:id
+   ↓
+7. Backend actualiza:
+   - candidateService.updateCandidateStage()
+   - Actualiza Application.currentInterviewStep
+   ↓
+8. Si éxito: mantener optimistic
+   Si error: rollback automático
+```
+
 ## Separación de responsabilidades
 
 ### Presentation Layer
@@ -128,9 +185,12 @@ El sistema LTI sigue una **arquitectura en capas** con separación clara entre f
 
 ### Infrastructure Layer
 
--   **Responsabilidad**: Acceso a datos, sistemas externos, archivos
--   **Nota**: Actualmente Prisma se usa en domain (debería estar aquí idealmente)
--   **Ubicación**: `backend/src/infrastructure/` (parcialmente implementado)
+-   **Backend**: Acceso a datos, sistemas externos, archivos
+    - **Nota**: Actualmente Prisma se usa en domain (debería estar aquí idealmente)
+    - **Ubicación**: `backend/src/infrastructure/` (parcialmente implementado)
+-   **Frontend**: Cliente API, servicios, adapters DTO ↔ Domain
+    - **Ubicación**: `frontend/src/infrastructure/`
+    - **Componentes**: `apiClient.ts`, `positionService.ts`, `candidateService.ts`, `dto/`
 
 ## Decisiones arquitectónicas
 
@@ -177,11 +237,14 @@ El sistema LTI sigue una **arquitectura en capas** con separación clara entre f
 
 ### Posibles mejoras arquitectónicas
 
-1. **Repository Pattern**: Abstraer Prisma detrás de interfaces
+1. **Repository Pattern**: Abstraer Prisma detrás de interfaces (backend)
 2. **Event Sourcing**: Para auditoría de cambios
 3. **CQRS**: Separar comandos y consultas
 4. **API Gateway**: Si se añaden más servicios
 5. **Message Queue**: Para procesamiento asíncrono (emails, notificaciones)
+6. **React Query/SWR**: Para mejor gestión de caché y revalidación en frontend
+7. **State Management**: Redux/Zustand si se necesita estado global complejo
+8. **Virtualización**: react-window para listas grandes de candidatos
 
 ## Preguntas al humano
 
