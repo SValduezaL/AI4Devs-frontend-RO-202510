@@ -31,7 +31,7 @@
   "scripts": {
     "start": "dotenv -e ../.env -- react-scripts start",
     "build": "dotenv -e ../.env -- react-scripts build",
-    "test": "jest --config jest.config.js",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
