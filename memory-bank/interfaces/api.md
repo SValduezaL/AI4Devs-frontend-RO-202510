@@ -174,6 +174,8 @@ Actualiza la etapa de entrevista de una aplicación específica de un candidato.
 }
 ```
 
+**Nota**: `currentInterviewStep` debe ser el **ID numérico** del `InterviewStep`, no el nombre.
+
 **Response 200**:
 
 ```json
@@ -226,15 +228,21 @@ Obtiene todos los candidatos que aplicaron a una posición específica.
     {
         "fullName": "Juan Pérez",
         "currentInterviewStep": "Entrevista Técnica",
-        "averageScore": 85.5
+        "averageScore": 85.5,
+        "id": 1,
+        "applicationId": 1
     },
     {
         "fullName": "María García",
         "currentInterviewStep": "Entrevista Cultural",
-        "averageScore": 92.0
+        "averageScore": 92.0,
+        "id": 2,
+        "applicationId": 2
     }
 ]
 ```
+
+**Nota**: `currentInterviewStep` viene como **string** (nombre de la etapa), pero el PUT requiere el **ID numérico**. El frontend debe mapear nombre → ID usando los datos de `interviewFlow`.
 
 **Response 404**: Posición no encontrada  
 **Response 500**: Error interno
@@ -254,7 +262,37 @@ Obtiene el flujo de entrevistas asociado a una posición.
 
 -   `id` (integer): ID de la posición
 
-**Response 200**: `UNKNOWN` (endpoint detectado pero respuesta no analizada)
+**Response 200**:
+
+```json
+{
+    "interviewFlow": {
+        "positionName": "Senior Backend Engineer",
+        "interviewFlow": {
+            "id": 1,
+            "description": "Standard development interview process",
+            "interviewSteps": [
+                {
+                    "id": 1,
+                    "interviewFlowId": 1,
+                    "interviewTypeId": 1,
+                    "name": "Initial Screening",
+                    "orderIndex": 1
+                },
+                {
+                    "id": 2,
+                    "interviewFlowId": 1,
+                    "interviewTypeId": 2,
+                    "name": "Technical Interview",
+                    "orderIndex": 2
+                }
+            ]
+        }
+    }
+}
+```
+
+**Nota**: La respuesta está envuelta en un objeto `interviewFlow`. El frontend debe extraer `interviewFlow.interviewFlow` para obtener los datos.
 
 **Archivos**:
 

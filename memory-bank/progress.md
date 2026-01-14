@@ -61,12 +61,21 @@
 -   `AddCandidateForm` - Formulario para añadir candidatos
 -   `FileUploader` - Componente de subida de archivos
 -   `Positions` - Lista de posiciones
+-   `PositionPage` - Página de detalle de posición con Kanban
+-   `PositionKanban` - Componente Kanban con drag & drop
+-   `KanbanColumn` - Columna del Kanban (droppable)
+-   `CandidateCard` - Tarjeta de candidato (draggable)
+-   `PositionHeader` - Cabecera con botón volver y título
 
 ✅ **Integración con API**
 
 -   Servicio `candidateService` configurado
+-   Servicio `positionService` con `fetchInterviewFlow` y `fetchCandidates`
+-   Servicio `candidateService.updateStage` para actualizar etapa
+-   Cliente API centralizado (`apiClient.ts`) con axios
 -   Configuración de API base URL
 -   Manejo básico de errores
+-   Optimistic UI con rollback en caso de error
 
 ✅ **Build de producción**
 
@@ -115,6 +124,15 @@
 -   Modelo `Interview` existe
 -   No hay UI para registrar resultados de entrevistas
 -   **Impacto**: No se puede hacer seguimiento completo
+
+✅ **Página de detalle de posición (Position)**
+
+-   Kanban interactivo para gestionar candidatos por etapa
+-   Drag & drop funcional con `@dnd-kit`
+-   Optimistic UI con rollback automático
+-   Responsive (móvil: columnas verticales)
+-   Accesibilidad (ARIA labels, keyboard navigation)
+-   Integración completa con API
 
 ❌ **Gestión de aplicaciones**
 

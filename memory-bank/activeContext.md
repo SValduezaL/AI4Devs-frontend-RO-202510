@@ -2,7 +2,20 @@
 
 ## En qué estamos ahora
 
-**Estado inicial**: Memory Bank creado el 2026-01-14
+**Estado actual**: Implementación de página Position completada (2026-01-14)
+
+**Última actividad**: Implementación completa de la página de detalle de posición (`/positions/:id`) con:
+
+-   Kanban interactivo con drag & drop
+-   Integración con API (GET interviewFlow, GET candidates, PUT updateStage)
+-   Optimistic UI con rollback
+-   Responsive design (móvil y desktop)
+-   Accesibilidad básica (ARIA, keyboard navigation)
+
+**Pendiente**:
+
+-   Tests unitarios de utilidades (positionUtils)
+-   Tests de integración (DnD + API)
 
 Este Memory Bank fue generado mediante análisis automático del código fuente del repositorio. La información contenida se basa en:
 
